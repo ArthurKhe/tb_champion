@@ -8,7 +8,7 @@ from django.db.models import ForeignKey
 class Sport_type(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    count = models.IntegerField()
+    count = models.IntegerField(default=0)
 
 
 class TB_user(models.Model):
@@ -51,8 +51,6 @@ class Participant(models.Model):
 
 class Match(models.Model):
     date = models.DateField()
-    score_one = models.IntegerField()
-    score_two = models.IntegerField()
     subevent_id = models.ForeignKey(Subevent, on_delete=models.CASCADE)
 
 
@@ -64,3 +62,4 @@ class Participant_Match(models.Model):
 class User_Event(models.Model):
         tb_user_id = models.ForeignKey(TB_user, on_delete=models.CASCADE)
         event_id = models.ForeignKey(Event, on_delete=models.CASCADE)
+        score = models.IntegerField(default=0)
