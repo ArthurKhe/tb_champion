@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from tournament import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('types/', views.SportTypes.as_view()),
+    path('events/<int:st>', views.Events.as_view()),
+    path('subevents/<int:ev>', views.Subevents.as_view()),
+    path('participant/<int:sid>', views.Participants.as_view()),
+    path('countsubevent/<int:evid>', views.CountSubevents.as_view()),
+    path('countparticipants/<int:sid>', views.CountParticipants.as_view()),
 ]
