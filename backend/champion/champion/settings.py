@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-c(sq^i%gxa7l5*d6h$xnw1a5-4zz)i-6orff(lu+mqzn(=-rry
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.ngrok.io']
 
 
 # Application definition
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
+
     'tournament',
 ]
 
@@ -49,7 +51,26 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:8000',
+#     'http://156e-95-152-62-167.ngrok.io'
+# ]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:8000',
+#     'http://localhost:3000',
+#     'http://0de8-95-152-62-167.ngrok.io'
+# ]
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_CREDENTIALS = True
+# CSRF_TRUSTED_ORIGINS = [
+#     'localhost:8000',
+#     '156e-95-152-62-167.ngrok.io'
+# ]
 
 ROOT_URLCONF = 'champion.urls'
 
