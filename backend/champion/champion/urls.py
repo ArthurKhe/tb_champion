@@ -22,6 +22,7 @@ urlpatterns = [
     path('types/', views.SportTypes.as_view()),
     path('events/<int:st>', views.Events.as_view()),
     path('event/<int:pk>', views.Event.as_view()),
+    path('findsports/<str:name>', views.FindSports.as_view()),
     path('subevents/<int:ev>', views.Subevents.as_view()),
     path('participants/<int:sid>', views.Participants.as_view()),
     path('participant/<int:pk>', views.Participant.as_view()),

@@ -72,6 +72,15 @@ class SportTypes(APIView):
         return Response(serialized_types.data)
 
 
+class FindSports(APIView):
+    def get(self, request, name, format=None):
+        st = models.Sport_type.objects.filter(name=name)
+        if not st:
+            return HttpResponseNotFound()
+        serialized_types = Sport_type_Serializator(st, many=True)
+        return Response(serialized_types.data)
+
+
 class Events(APIView):
     def get(self, request, st, format=None):
         events = models.Event.objects.filter(sport_type_id=st)
@@ -90,6 +99,9 @@ class Event(APIView):
 
         serialized_events = EventSerializator(event, many=True)
         return Response(serialized_events.data)
+
+
+
 
 
 class Subevents(APIView):
@@ -128,6 +140,33 @@ class SportData(APIView):
         else:
             count_event = sport.count
             today_year = date.today().year
+            count_events_in_year = []
+            avg_count_participant_in_year = []
+            for i in range(5):
+                events = models.Event.objects.filter(sport_type_id=pk,
+                                                     date_begin__gt=date(today_year - i, 1, 1),
+                                                     date_begin__lt=date(today_year - i + 1, 1, 1)
+                                                     )
+
+                count_events_in_year.append(len(events))
+                list_counts_participants_in_year = []
+                for event in events:
+                    subevents = models.Subevent.objects.filter(event_id=event.pk)
+                    count = 0
+                    for subevent in subevents:
+                        count += models.Participant.objects.filter(subevent_id=subevent.id).count()
+                    list_counts_participants_in_year.append(count)
+
+                if (len(events) != 0):
+                    avg_count_participant_in_year.append(
+                        sum(list_counts_participants_in_year) / len(list_counts_participants_in_year)
+                    )
+                else:
+                    avg_count_participant_in_year.append(
+                        0.0
+                    )
+
+
             events_cur_year = models.Event.objects.filter(sport_type_id=pk, date_begin__gt=date(today_year, 1, 1), date_begin__lt=date(today_year + 1, 1, 1))
             count_event_cur_year = len(events_cur_year)
             events_last_year = models.Event.objects.filter(sport_type_id=pk, date_begin__gt=date(today_year-1, 1, 1), date_begin__lt=date(today_year, 1, 1))
@@ -154,7 +193,9 @@ class SportData(APIView):
                 "count_events_cur_year": f"{count_event_cur_year}",
                 "count_events_last_year": f"{count_event_last_year}",
                 "avg_participants_cur_year": f"{avg_count_participant_cur_year}",
-                "avg_participants_last_year": f"{avg_count_participant_last_year}"
+                "avg_participants_last_year": f"{avg_count_participant_last_year}",
+                "count_events_in_year": count_events_in_year,
+                "avg_count_participant_in_year": avg_count_participant_in_year
             })
 
 
@@ -214,4 +255,4 @@ class AvgCounts(APIView):
         for subevent in subevents:
             count.append(models.Participant.objects.filter(subevent_id=subevent.id).count())
         avg = sum(count) / len(count)
-        return Response({"avg_count": f"{avg}"})
+        return Response({"avg_count": [f"{avg}", 0]})
