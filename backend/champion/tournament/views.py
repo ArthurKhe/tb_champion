@@ -178,7 +178,10 @@ class SportData(APIView):
                 for subevent in subevents:
                     count += models.Participant.objects.filter(subevent_id=subevent.id).count()
                 list_counts_participants_cur_year.append(count)
-            avg_count_participant_cur_year = sum(list_counts_participants_cur_year) / len(list_counts_participants_cur_year)
+            if (len(list_counts_participants_cur_year) != 0):
+                avg_count_participant_cur_year = sum(list_counts_participants_cur_year) / len(list_counts_participants_cur_year)
+            else:
+                avg_count_participant_cur_year = 0
             list_counts_participants_last_year = []
             for event in events_last_year:
                 subevents = models.Subevent.objects.filter(event_id=event.pk)
@@ -186,7 +189,10 @@ class SportData(APIView):
                 for subevent in subevents:
                     count += models.Participant.objects.filter(subevent_id=subevent.id).count()
                 list_counts_participants_last_year.append(count)
-            avg_count_participant_last_year = sum(list_counts_participants_last_year) / len(list_counts_participants_last_year)
+            if (len(list_counts_participants_last_year) != 0):
+                avg_count_participant_last_year = sum(list_counts_participants_last_year) / len(list_counts_participants_last_year)
+            else:
+                avg_count_participant_last_year = 0
             return Response({
                 "name": f"{sport.name}",
                 "count_events": f"{count_event}",
